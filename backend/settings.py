@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'accounts',
     'albums',
     'photos',
     'comments',
@@ -124,3 +125,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+AUTH_USER_MODEL = 'accounts.User'# to use created user model
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'#later replace to Gmail SMTP
