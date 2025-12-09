@@ -127,3 +127,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'accounts.User'# to use created user model
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'#later replace to Gmail SMTP
+#for JWT implementation
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # for admin/testing (browser cookie)
+        'rest_framework_simplejwt.authentication.JWTAuthentication',# add simplejwt package
+    ),
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
