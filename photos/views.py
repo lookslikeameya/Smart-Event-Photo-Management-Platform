@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from .models import Photo, Tag
 from .serializers import PhotoSerializer, TagSerializer
 
+from rest_framework.permissions import IsAuthenticated
+from accounts.permissions import IsVerified, IsPhotographer,IsAdmin
+
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -13,11 +16,23 @@ class TagViewSet(viewsets.ModelViewSet):
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all().order_by("-photo_id")
     serializer_class = PhotoSerializer
-
+    
+    permission_classes = [IsAuthenticated, IsVerified]
+    
     def perform_create(self, serializer):
         serializer.save(uploaded_by=self.request.user)
 
-    #photo
+    def get_permissions(self):
+        if self.request.method == "DELETE":
+            return [IsAuthenticated(), IsAdmin()]
+
+        # PHOTOGRAPHER-ONLY UPLOAD
+        if self.request.method == "POST":
+            return [IsAuthenticated(), IsVerified(), IsPhotographer()]
+
+        return super().get_permissions()    
+
+    #Add tag
     @action(detail=True, methods=["post"])
     def add_tag(self, request, pk=None):
         photo = self.get_object()

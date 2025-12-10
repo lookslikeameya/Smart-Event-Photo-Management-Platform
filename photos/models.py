@@ -33,4 +33,5 @@ class Photo(models.Model):
     )
 
     capture_at = models.DateTimeField(null=True, blank=True)
-    metadata = models.JSONField(default=dict, blank=True)
+    # metadata = models.JSONField(default=dict, blank=True)  will do json later
+    metadata = models.CharField()
