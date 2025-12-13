@@ -24,7 +24,13 @@ class Photo(models.Model):
 
   
     tags = models.ManyToManyField(Tag, blank=True, related_name="photos")
-
+    
+    favorited_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through="PhotoFavorite",
+        related_name="favorite_photos",
+        blank=True
+    )
  
     users_tagged = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -35,3 +41,21 @@ class Photo(models.Model):
     capture_at = models.DateTimeField(null=True, blank=True)
     # metadata = models.JSONField(default=dict, blank=True)  will do json later
     metadata = models.CharField()
+
+class PhotoFavorite(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    photo = models.ForeignKey(
+        Photo,
+        on_delete=models.CASCADE,
+        related_name="favorite_relations"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "photo")
+
+    def __str__(self):
+        return f"{self.user} favorited {self.photo.photo_id}"

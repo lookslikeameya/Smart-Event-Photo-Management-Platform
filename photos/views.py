@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Photo, Tag
+from .models import Photo, Tag, PhotoFavorite
 from .serializers import PhotoSerializer, TagSerializer
 
 from rest_framework.permissions import IsAuthenticated
@@ -56,3 +56,37 @@ class PhotoViewSet(viewsets.ModelViewSet):
             return Response({"error": "Tag not found"}, status=400)
 
         return Response({"message": "Tag removed"})
+    
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def favorite(self, request, pk=None):
+        photo = self.get_object()
+
+        PhotoFavorite.objects.get_or_create(
+        user=request.user,
+        photo=photo
+        )
+
+        return Response(
+        {"message": "Photo added to favorites"},
+        status=status.HTTP_200_OK
+        )
+    
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def unfavorite(self, request, pk=None):
+        photo = self.get_object()
+
+        PhotoFavorite.objects.get(
+        user=request.user,
+        photo=photo
+        ).delete()
+
+        return Response(
+        {"message": "Photo removed to favorites"},
+        status=status.HTTP_200_OK
+        )
+
+    
+
+    
+   
