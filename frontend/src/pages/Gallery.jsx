@@ -1,10 +1,36 @@
-const Gallery = () => {
-  return (
-    <div style={{ color: "white", padding: "2rem" }}>
-      <h1>Gallery Page</h1>
-      <p>If you can see this, protected routing works ✅</p>
-    </div>
-  );
-};
+import { useEffect, useState } from "react";
+import api from "../services/api";
+
+function Gallery() {
+  const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const res = await api.get("/photos/");
+        setPhotos(res.data);
+      } catch (err) {
+        alert("Failed to load photos");
+        console.error(err);
+      }
+    };
+
+    fetchPhotos();
+  }, []);
+
+return (
+  <div className="gallery-container">
+    {photos.map((photo) => (
+      <img
+        key={photo.photo_id}
+        src={photo.thumbnail_img}
+        alt="event"
+        className="gallery-img"
+      />
+    ))}
+  </div>
+);
+
+}
 
 export default Gallery;

@@ -18,9 +18,9 @@ class Photo(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
-    original_img = models.ImageField(upload_to="photos/originals/")
-    thumbnail_img = models.ImageField(upload_to="photos/thumbnails/")
-    watermark_img = models.ImageField(upload_to="photos/watermarks/")
+    original_img = models.ImageField(upload_to="originals/")
+    thumbnail_img = models.ImageField(upload_to="thumbnails/")
+    watermark_img = models.ImageField(upload_to="watermarks/")
 
   
     tags = models.ManyToManyField(Tag, blank=True, related_name="photos")
