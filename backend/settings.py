@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'albums',
     'photos',
     'comments',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
+CORS_ALLOW_ALL_ORIGINS= True
 
 ROOT_URLCONF = 'backend.urls'
 
