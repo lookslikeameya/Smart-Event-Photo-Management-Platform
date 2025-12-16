@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
+import api from "../services/api";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,34 +10,25 @@ function Login() {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/accounts/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
+    const res = await api.post("/accounts/login/", {
+      email: email,
+      password: password,
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert(data.non_field_errors || "Login failed");
-      return;
-    }
-
     // SAVE TOKENS
-    localStorage.setItem("access", data.access);
-    localStorage.setItem("refresh", data.refresh);
+    localStorage.setItem("access", res.data.access);
+    localStorage.setItem("refresh", res.data.refresh);
 
     alert("Login successful!");
-  } catch (error) {
-    console.error(error);
-    alert("Server error");
+  } catch (err) {
+    if (err.response) {
+      alert(err.response.data?.non_field_errors || "Login failed");
+    } else {
+      alert("Server error");
+    }
   }
 };
+
 
 
   return (
