@@ -19,8 +19,8 @@ class Photo(models.Model):
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     original_img = models.ImageField(upload_to="originals/")
-    thumbnail_img = models.ImageField(upload_to="thumbnails/")
-    watermark_img = models.ImageField(upload_to="watermarks/")
+    thumbnail_img = models.ImageField(upload_to="thumbnails/", null=True, blank=True)
+    watermark_img = models.ImageField(upload_to="watermarks/", null=True, blank=True)
 
   
     tags = models.ManyToManyField(Tag, blank=True, related_name="photos")
@@ -40,7 +40,7 @@ class Photo(models.Model):
 
     capture_at = models.DateTimeField(null=True, blank=True)
     # metadata = models.JSONField(default=dict, blank=True)  will do json later
-    metadata = models.CharField()
+    metadata = models.CharField(null=True, blank=True)
 
 class PhotoFavorite(models.Model):
     user = models.ForeignKey(

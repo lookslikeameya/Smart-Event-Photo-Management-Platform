@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Gallery from "./pages/Gallery";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import Upload from "./pages/Upload";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +14,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Gallery />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute>
+              <Upload />
             </ProtectedRoute>
           }
         />
