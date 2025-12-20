@@ -1,33 +1,46 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 import "./Login.css";
 import api from "../services/api";
 
 function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const res = await api.post("/accounts/login/", {
-      email: email,
-      password: password,
-    });
+    try {
+      const res = await api.post("/accounts/login/", {
+        email: email,
+        password: password,
+      });
 
-    // SAVE TOKENS
-    localStorage.setItem("access", res.data.access);
-    localStorage.setItem("refresh", res.data.refresh);
+      // SAVE TOKENS
+      // localStorage.setItem("access", res.data.access);
+      // localStorage.setItem("refresh", res.data.refresh);
+      login(res.data.access, res.data.refresh)
+      navigate("/gallery");
 
-    alert("Login successful!");
-  } catch (err) {
-    if (err.response) {
-      alert(err.response.data?.non_field_errors || "Login failed");
-    } else {
-      alert("Server error");
+      alert("Login successful!");
+
+    } catch (err) {
+      if (err.response) {
+        alert(err.response.data?.non_field_errors || "Login failed");
+      } else {
+        alert("Server error");
+      }
     }
-  }
-};
+
+
+  };
+  const handleOmniportLogin = () => {
+    window.location.href = "http://127.0.0.1:8000/api/accounts/auth/omniport/login/";
+  };
 
 
 
@@ -52,6 +65,15 @@ function Login() {
           />
 
           <button type="submit">Login</button>
+          <div className="divider">OR</div>
+
+          <button
+            className="omniport-btn"
+            onClick={handleOmniportLogin}
+          >
+          
+            Login with Omniport
+          </button>
         </form>
       </div>
     </div>

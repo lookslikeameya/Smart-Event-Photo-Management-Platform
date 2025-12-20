@@ -39,3 +39,42 @@
 .login-box button:hover {
   background: #4338ca;
 }
+.divider {
+  margin: 16px 0;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.omniport-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 12px;
+  background-color: #111;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 8px;
+
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.omniport-btn:hover {
+  background-color: #1a1a1a;
+  transform: translateY(-1px);
+}
+
+.omniport-btn:active {
+  transform: translateY(0);
+}
+
+.omniport-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}

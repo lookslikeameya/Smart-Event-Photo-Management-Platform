@@ -3,6 +3,10 @@ import Login from "./pages/Login";
 import Gallery from "./pages/Gallery";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Upload from "./pages/Upload";
+import OmniportSuccess from "./pages/OmniportSuccess";
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -26,6 +30,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/omniport-success" element={<OmniportSuccess />} />
       </Routes>
     </BrowserRouter>
   );

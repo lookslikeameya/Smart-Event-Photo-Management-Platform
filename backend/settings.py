@@ -149,3 +149,19 @@ SIMPLE_JWT = {
 # Media files (uploaded images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+from dotenv import load_dotenv
+import os
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+load_dotenv()
+OMNIPORT_CLIENT_ID = os.getenv("OMNIPORT_CLIENT_ID")
+OMNIPORT_CLIENT_SECRET = os.getenv("OMNIPORT_CLIENT_SECRET")
+OMNIPORT_REDIRECT_URI = "http://127.0.0.1:8000/api/accounts/auth/omniport/callback/"
+
+OMNIPORT_AUTHORIZE_URL = "https://channeli.in/oauth/authorise/"
+OMNIPORT_TOKEN_URL = "https://channeli.in/open_auth/token/"
+OMNIPORT_USERINFO_URL = "https://channeli.in/open_auth/get_user_data/"
