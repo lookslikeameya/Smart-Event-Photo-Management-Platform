@@ -73,7 +73,7 @@ export default function Gallery() {
             onClick={() => setSelectedPhoto(photo)}
           >
             <img
-              src={photo.thumbnail_img || photo.original_img}
+              src={photo.thumbnail_img }
               className="gallery-img"
               alt=""
             />

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "django_celery_results",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -165,3 +166,11 @@ OMNIPORT_REDIRECT_URI = "http://127.0.0.1:8000/api/accounts/auth/omniport/callba
 OMNIPORT_AUTHORIZE_URL = "https://channeli.in/oauth/authorise/"
 OMNIPORT_TOKEN_URL = "https://channeli.in/open_auth/token/"
 OMNIPORT_USERINFO_URL = "https://channeli.in/open_auth/get_user_data/"
+
+
+#Celery setup
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_RESULT_BACKEND = "django-db"

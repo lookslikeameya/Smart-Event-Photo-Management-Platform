@@ -20,7 +20,10 @@ class PhotoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsVerified]
     
     def perform_create(self, serializer):
-        serializer.save(uploaded_by=self.request.user)
+        photo= serializer.save(uploaded_by=self.request.user)
+        #generate thumbnail
+        from photos.tasks import generate_thumbnail
+        generate_thumbnail.delay(photo.photo_id)
 
     def get_permissions(self):
         if self.request.method == "DELETE":
