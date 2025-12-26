@@ -24,9 +24,9 @@ function Login() {
       // localStorage.setItem("access", res.data.access);
       // localStorage.setItem("refresh", res.data.refresh);
       login(res.data.access, res.data.refresh)
-      navigate("/gallery");
+      setTimeout(() => navigate("/gallery"), 0);
 
-      alert("Login successful!");
+      console.log("Login successful!");
 
     } catch (err) {
       if (err.response) {

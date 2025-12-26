@@ -21,7 +21,7 @@ export default function OmniportSuccess() {
     
     login(access,refresh)
 
-    navigate("/gallery");
+    setTimeout(() => navigate("/gallery"), 0);
   }, []);
 
   return <p>Logging you in...</p>;
