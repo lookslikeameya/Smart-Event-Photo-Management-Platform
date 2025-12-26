@@ -21,9 +21,14 @@ class PhotoViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         photo= serializer.save(uploaded_by=self.request.user)
-        #generate thumbnail
-        from photos.tasks import generate_thumbnail
-        generate_thumbnail.delay(photo.photo_id)
+        #generate thumbnail and watermark (by chaining)
+        from photos.tasks import generate_thumbnail, generate_watermark
+        from celery import chain
+        chain(
+            generate_thumbnail.s(photo.photo_id),
+            generate_watermark.s()
+        ).delay()
+
 
     def get_permissions(self):
         if self.request.method == "DELETE":

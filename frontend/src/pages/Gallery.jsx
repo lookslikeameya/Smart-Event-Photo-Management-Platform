@@ -92,7 +92,7 @@ export default function Gallery() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={selectedPhoto.watermark_img || selectedPhoto.original_img}
+              src={selectedPhoto.watermark_img }
               className="modal-image"
               alt=""
             />
