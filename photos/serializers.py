@@ -16,3 +16,13 @@ class PhotoSerializer(serializers.ModelSerializer):
         model = Photo
         fields = "__all__"
         read_only_fields = ["photo_id", "uploaded_by"]
+class PhotoListSerializer(serializers.ModelSerializer):
+    
+
+    class Meta:
+        model = Photo
+        fields = [
+            "photo_id",
+            "thumbnail_img",
+            "is_processed",
+        ]

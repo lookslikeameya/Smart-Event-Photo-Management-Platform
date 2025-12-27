@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Photo, Tag, PhotoFavorite
-from .serializers import PhotoSerializer, TagSerializer
+from .serializers import PhotoSerializer,PhotoListSerializer, TagSerializer
 
 from rest_framework.permissions import IsAuthenticated
 from accounts.permissions import IsVerified, IsPhotographer,IsAdmin
@@ -12,12 +12,25 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+#apply pagination
+from rest_framework.pagination import PageNumberPagination
+class PhotoPagination(PageNumberPagination):
+    page_size=12
+    page_size_query_param="page_size"
+    max_page_size=50
+
+
 
 class PhotoViewSet(viewsets.ModelViewSet):
+    pagination_class = PhotoPagination
     queryset = Photo.objects.all().order_by("-photo_id")
-    serializer_class = PhotoSerializer
-    
     permission_classes = [IsAuthenticated, IsVerified]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET" and self.kwargs.get("pk") is None:
+            return PhotoListSerializer
+        return PhotoSerializer
+
     
     def perform_create(self, serializer):
         photo= serializer.save(uploaded_by=self.request.user)

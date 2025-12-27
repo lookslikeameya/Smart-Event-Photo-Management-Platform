@@ -4,14 +4,19 @@ import "./Gallery.css";
 
 export default function Gallery() {
   const [photos, setPhotos] = useState([]);
+  const [nextPage, setNextPage] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const fetchPhotos = async () => {
     try {
       const res = await api.get("/photos/");
-      setPhotos(res.data);
+      // console.log(res.data.next)
+      setNextPage(res.data.next);
+      console.log(nextPage);
+      setPhotos(res.data.results);
     } catch {
       alert("Failed to load photos");
     } finally {
@@ -22,6 +27,24 @@ export default function Gallery() {
   useEffect(() => {
     fetchPhotos();
   }, []);
+
+
+  //load-more logic
+  const loadMorePhotos = async () => {
+    if (!nextPage) return;
+
+    try {
+      setLoadingMore(true);
+      const res = await api.get(nextPage);
+      setPhotos(prev => [...prev, ...res.data.results]);
+      setNextPage(res.data.next);
+    } catch {
+      alert("Failed to load more photos");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
 
   // ADD TAG ON ENTER
   const handleTagKeyDown = async (e) => {
@@ -70,16 +93,32 @@ export default function Gallery() {
           <div
             key={photo.photo_id}
             className="gallery-card"
-            onClick={() => setSelectedPhoto(photo)}
+            onClick={async () => {
+              const res = await api.get(`/photos/${photo.photo_id}/`);
+              setSelectedPhoto(res.data);
+            }}
+
           >
             <img
-              src={photo.thumbnail_img }
+              src={photo.thumbnail_img}
               className="gallery-img"
               alt=""
             />
           </div>
         ))}
       </div>
+      {nextPage && (
+        <div className="load-more-container">
+          <button
+            className="load-more-btn"
+            onClick={loadMorePhotos}
+            disabled={loadingMore}
+          >
+            {loadingMore ? "Loading..." : "Load more"}
+          </button>
+        </div>
+      )}
+
 
       {/* MODAL */}
       {selectedPhoto && (
@@ -92,7 +131,7 @@ export default function Gallery() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={selectedPhoto.watermark_img }
+              src={selectedPhoto.watermark_img}
               className="modal-image"
               alt=""
             />
