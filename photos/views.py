@@ -42,6 +42,68 @@ class PhotoViewSet(viewsets.ModelViewSet):
             generate_watermark.s()
         ).delay()
 
+    # batch upload endpoint
+    @action(
+    detail=False,
+    methods=["post"],
+    permission_classes=[IsAuthenticated, IsVerified, IsPhotographer]
+    )
+
+    def batch_upload(self, request):
+        files = request.FILES.getlist("photos")
+        album_id = request.data.get("album")
+
+
+        if not files:
+            return Response(
+                {"error": "No files provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+
+        album = None
+        if album_id:
+            from albums.models import Album
+            try:
+             album = Album.objects.get(album_id=album_id)
+            except Album.DoesNotExist:
+                return Response(
+                 {"error": "Invalid album"},
+                 status=status.HTTP_400_BAD_REQUEST
+                )
+
+
+        created_photos = []
+
+        from photos.tasks import generate_thumbnail, generate_watermark
+        from celery import chain
+
+        for file in files:
+            photo = Photo.objects.create(
+                original_img=file,
+                uploaded_by=request.user,
+                album=album
+            )
+
+            # async processing per photo
+            chain(
+                generate_thumbnail.s(photo.photo_id),
+                generate_watermark.s()
+            ).delay()
+
+            created_photos.append(photo.photo_id)
+
+        return Response(
+            {
+             "message": "Batch upload started",
+             "count": len(created_photos),
+             "photo_ids": created_photos
+            },
+            status=status.HTTP_201_CREATED
+        )
+    
+
+
 
     def get_permissions(self):
         if self.request.method == "DELETE":

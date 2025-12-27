@@ -15,7 +15,7 @@ class Tag(models.Model):
 class Photo(models.Model):
     photo_id = models.AutoField(primary_key=True)
 
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE,null=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     is_processed = models.BooleanField(default=False)
     original_img = models.ImageField(upload_to="originals/")

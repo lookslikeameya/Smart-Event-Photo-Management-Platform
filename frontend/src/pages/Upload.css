@@ -38,3 +38,8 @@
   object-fit: cover;
   border-radius: 8px;
 }
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+}
